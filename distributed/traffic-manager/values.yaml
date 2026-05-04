@@ -83,7 +83,7 @@ gcp:
 kubernetes:
   # -- When deploying on OpenShift.
   openshift:
-    enabled: false
+    enabled: true
 
   # -- ulimit settings for the container entrypoint (leave empty to skip). For AWS Fargate, you must override the default limit of 1024 for nofile and nproc to meet the WSO2 recommendation of 20000.
   ulimits:
@@ -94,7 +94,7 @@ kubernetes:
 
   securityContext:
     # -- User ID of the container
-    runAsUser: 10001
+    runAsUser: null
     # -- SELinux context for the container
     seLinux:
       enabled: false
@@ -109,7 +109,7 @@ kubernetes:
   # -- Set UNIX permissions over the executable scripts
   configMaps:
     scripts:
-      defaultMode: "0407"
+      defaultMode: "0457"
 
   # -- Mount extra volumes to the deployment pods, e.g to mount secrets
   # extraVolumeMounts:
@@ -156,23 +156,23 @@ wso2:
         properties:
           key: value
       # -- Super admin username
-      adminUsername: ""
+      adminUsername: "admin"
       # -- Super admin password
-      adminPassword: ""
+      adminPassword: "admin"
       databases:
         # -- Database type. eg: mysql, oracle, mssql, postgres
-        type: ""
+        type: "mysql"
         jdbc:
           # -- JDBC driver class name
-          driver: ""
+          driver: "com.mysql.cj.jdbc.Driver"
         # -- APIM AM_DB configurations.
         apim_db:
           # -- APIM AM_DB URL
-          url: ""
+          url: "jdbc:mysql://192.168.1.2:3306/apim_db_openshift?useSSL=false&amp;allowPublicKeyRetrieval=true"
           # -- APIM AM_DB username
-          username: ""
+          username: "root"
           # -- APIM AM_DB password
-          password: ""
+          password: "root1234"
           # -- APIM database JDBC pool parameters
           poolParameters:
             defaultAutoCommit: true
@@ -185,11 +185,11 @@ wso2:
         # -- APIM SharedDB configurations.
         shared_db:
           # -- APIM SharedDB URL
-          url: ""
+          url: "jdbc:mysql://192.168.1.2:3306/shared_db_openshift?useSSL=false&amp;allowPublicKeyRetrieval=true"
           # -- APIM SharedDB username
-          username: ""
+          username: "root"
           # -- APIM SharedDB password
-          password: ""
+          password: "root1234"
           # -- APIM shared database JDBC pool parameters
           poolParameters:
             defaultAutoCommit: true
@@ -233,9 +233,9 @@ wso2:
             # -- TLS keystore alias
             alias: "wso2carbon"
             # -- TLS keystore password
-            password: ""
+            password: "wso2carbon"
             # -- TLS keystore key password
-            keyPassword: ""
+            keyPassword: "wso2carbon"
           internal:
             # -- Internal keystore enabled
             enabled: false
@@ -251,13 +251,13 @@ wso2:
           # -- Truststore name
           name: "client-truststore.jks"
           # -- Truststore password
-          password: ""
+          password: "wso2carbon"
 
       km:
         # -- Key manager service name if default Resident KM is used
-        serviceUrl: "wso2am-cp-service"
+        serviceUrl: "wso2am-cp-wso2am-acp-service"
         # -- Key Manager service port
-        servicePort: 9443        
+        servicePort: 9443
 
       iskm:
         # If Identity Server is used as the Resident KM
@@ -267,11 +267,10 @@ wso2:
 
       eventhub:
         # -- Event hub (control plane) loadbalancer service url
-        serviceUrl: "wso2am-cp-service"
+        serviceUrl: "wso2am-cp-wso2am-acp-service"
         # -- Event hub service urls
         urls:
-          - "wso2am-cp-1-service"
-          - "wso2am-cp-2-service"
+          - "wso2am-cp-wso2am-acp-1-service"
 
       # APIM OAuth configurations
       oauth_config:
@@ -331,15 +330,15 @@ wso2:
       # -- Container registry credentials.
       # Specify image pull secrets for private registries
       imagePullSecrets:
-        enabled: false
-        username: ""
-        password: ""
+        enabled: true
+        username: "<username>"
+        password: "<password>"
       # -- Container registry hostname
-      registry: ""
+      registry: "docker.io"
       # -- Azure ACR repository name consisting the image
-      repository: ""
+      repository: "<username>/wso2-test"
       # -- Docker image tag
-      tag: ""
+      tag: "tm-4.6.0-os"
       # -- Docker image digest
       digest: ""
       # -- Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
@@ -350,20 +349,20 @@ wso2:
       # Resource configurations defined here are applicable for all API Manager product profiles of this deployment
       requests:
         # -- Memory request for API Manager
-        memory: "2Gi"
+        memory: "256Mi"
         # -- CPU request for API Manager
-        cpu: "2000m"
+        cpu: "250m"
       limits:
         # -- Memory limit for API Manager
-        memory: "3Gi"
+        memory: "1536Mi"
         # -- CPU limit for API Manager
-        cpu: "3000m"
+        cpu: "1000m"
       jvm:
         memory:
           # -- JVM heap memory Xms
-          xms: "2048m"
+          xms: "256m"
           # -- JVM heap memory Xmx
-          xmx: "2048m"
+          xmx: "1024m"
 
     # Kubernetes Probes
     # Indicates whether the container starting
@@ -373,7 +372,7 @@ wso2:
       # -- How often (in seconds) to perform the probe
       periodSeconds: 10
       # -- Minimum consecutive successes for the probe to be considered successful after having failed
-      failureThreshold: 3      
+      failureThreshold: 30      
     # Indicates whether the container is running
     livenessProbe:
       # -- Number of seconds after the container has started before liveness probes are initiated
@@ -422,4 +421,4 @@ wso2:
 
     # -- Enable high availability for traffic manager. If this is enabled, two traffic manager instances will be deployed.
     # This is not relavant to HA in Kubernetes. Multiple replicas of the same instance will not count as HA for TM.
-    highAvailability: true
+    highAvailability: false

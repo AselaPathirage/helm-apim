@@ -172,6 +172,7 @@ spec:
           initialDelaySeconds: {{ .Values.wso2.deployment.livenessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.wso2.deployment.livenessProbe.periodSeconds }}
           failureThreshold: {{ .Values.wso2.deployment.livenessProbe.failureThreshold }}
+          timeoutSeconds: {{ .Values.wso2.deployment.livenessProbe.timeoutSeconds }}
         readinessProbe:
           httpGet:
             path: /api/am/gateway/v2/server-startup-healthcheck
@@ -180,6 +181,7 @@ spec:
           initialDelaySeconds: {{ .Values.wso2.deployment.readinessProbe.initialDelaySeconds }}
           periodSeconds: {{ .Values.wso2.deployment.readinessProbe.periodSeconds }}
           failureThreshold: {{ .Values.wso2.deployment.readinessProbe.failureThreshold }}
+          timeoutSeconds: {{ .Values.wso2.deployment.readinessProbe.timeoutSeconds }}
         lifecycle:
           preStop:
             exec:
