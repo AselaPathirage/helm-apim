@@ -1,5 +1,7 @@
 # helm-apim
 
+Guide to use in openshift: https://medium.com/@aselapathirage/beyond-vanilla-kubernetes-deploying-wso2-api-manager-4-6-0-distributed-on-openshift-local-9de9093e093c
+
 This repo will be used to maintain APIM related helm charts
 
 ## Prerequisites
